@@ -1,1 +1,28 @@
-/* Favorites feature styles — added in a later phase. */
+@use '../../shared/styles/image-grid' as grid;
+
+:host {
+  display: block;
+}
+
+.grid {
+  @include grid.photo-grid;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.tile {
+  @include grid.photo-tile;
+}
+
+.tile img {
+  object-fit: cover;
+}
+
+.empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  padding: 2rem;
+}

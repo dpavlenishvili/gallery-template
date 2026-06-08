@@ -1,1 +1,37 @@
-/* Photo detail styles — added in a later phase. */
+:host {
+  display: block;
+
+  .detail {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  .detail img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 12px;
+    color: transparent;
+  }
+
+  .detail img.is-error {
+    display: none;
+  }
+
+  .detail:has(img.is-error)::before {
+    content: 'broken_image';
+    font-family: 'Material Icons';
+    font-feature-settings: 'liga';
+    font-size: 64px;
+    color: var(--mat-sys-on-surface-variant);
+  }
+
+  .state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+    padding: 2rem;
+  }
+}

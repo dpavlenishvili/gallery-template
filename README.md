@@ -1,59 +1,110 @@
-# GalleryTemplate
+# Photo Library
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 22.0.0.
+A small photo library built with **Angular 22**. It shows an infinite, random
+photostream and lets you save photos to a **Favorites** library that survives a
+page refresh. Images come from [picsum.photos](https://picsum.photos).
 
-## Development server
+## Features
 
-To start a local development server, run:
+- **Photostream** (`/`) — an infinite, randomly-ordered grid of photos. New
+  pages load automatically as you scroll, with a loading spinner and graceful
+  error / empty states.
+- **Click to favorite** — clicking a photo in the stream toggles it in your
+  Favorites.
+- **Favorites** (`/favorites`) — a grid of every saved photo; each tile opens
+  its detail page. Favorites are stored in `localStorage`, so they **persist
+  across refreshes**.
+- **Single photo** (`/photos/:id`) — a full-screen view of one photo with an
+  add / **remove from favorites** action.
+- Responsive, accessible **Material 3** UI with an active-route-aware header.
 
-```bash
-ng serve
-```
+## Tech stack
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+- **Angular 22** — standalone components, **zoneless** change detection, signals
+- **Angular Material 22** (Material 3 theming) + **SCSS**
+- **TypeScript 6**, RxJS (`rxResource`, HTTP interceptors)
+- **Vitest** + jsdom for unit tests, esbuild (`@angular/build`) for the build
 
-## Code scaffolding
+## Getting started
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
-
-```bash
-ng generate component component-name
-```
-
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
-
-```bash
-ng generate --help
-```
-
-## Building
-
-To build the project run:
-
-```bash
-ng build
-```
-
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
-
-## Running unit tests
-
-To execute unit tests with the [Vitest](https://vitest.dev/) test runner, use the following command:
+**Prerequisites:** Node.js `^20.19`, `^22.12`, or `≥24`, and npm.
 
 ```bash
-ng test
+# 1. Install dependencies
+npm install
+
+# 2. Start the dev server  ->  http://localhost:4200/
+npm start
+
+# 3. Run the unit tests
+npm test
+
+# 4. Production build  ->  dist/gallery-template/browser
+npm run build
 ```
 
-## Running end-to-end tests
+### Scripts
 
-For end-to-end (e2e) testing, run:
+| Script | What it does |
+| --- | --- |
+| `npm start` | Dev server with live reload at `http://localhost:4200/` |
+| `npm test` | Runs the unit-test suite once (Vitest) |
+| `npm run build` | Production build into `dist/gallery-template/browser` |
+| `npm run watch` | Development build that rebuilds on change |
+
+## Routes
+
+| Path | Screen |
+| --- | --- |
+| `/` | Photostream (infinite scroll) |
+| `/favorites` | Favorites library |
+| `/photos/:id` | Single photo |
+
+## Project structure
+
+```
+src/app/
+├── core/            # app-wide singletons
+│   ├── interceptors/  latency-interceptor — simulates a 200–300 ms API delay
+│   ├── models/        Photo
+│   ├── services/      photo · favorites · localstorage
+│   └── tokens/        API_BASE_URL · SIMULATED_LATENCY · INTERSECTION_OBSERVER · BROWSER_STORAGE
+├── features/        # lazy-loaded routed pages
+│   ├── photos/        Photos page + Photostream (paginated stream state)
+│   ├── favorites/     Favorites page
+│   └── photo-detail/  single-photo page
+├── layout/
+│   └── header/        top navigation
+└── shared/          # reusable building blocks
+    ├── components/    photo-card · photo-grid · loading-indicator
+    ├── directives/    infinite-scroll · image-status
+    ├── styles/        image-grid mixins
+    └── utils/         image-loader (picsum responsive URLs)
+```
+
+## Notable implementation details
+
+- **Infinite scroll is hand-rolled** with an `IntersectionObserver` directive —
+  no third-party library. The observer is provided through an injection token so
+  it can be swapped out in tests.
+- **Simulated real-world API** — an HTTP interceptor delays every response by a
+  random 200–300 ms.
+- **Images** use `NgOptimizedImage` with a custom `IMAGE_LOADER` that rewrites
+  picsum URLs to the requested width; the first images in the stream are marked
+  `priority`, and `index.html` preconnects to the picsum CDN for a faster LCP.
+- **State** is signal-based throughout. `FavoritesService` persists to
+  `localStorage` via an injectable `BROWSER_STORAGE` token, keeping it testable
+  and safe when storage is unavailable.
+- **Routing** uses lazy standalone components; the `:id` route parameter binds
+  straight to a component input via `withComponentInputBinding()`.
+
+## Testing
+
+40 unit tests (Vitest + jsdom) cover the services, tokens, latency interceptor,
+directives, shared components, and all three pages — including favorites
+persistence, the paginated stream (loading / error / empty), and the
+infinite-scroll trigger.
 
 ```bash
-ng e2e
+npm test
 ```
-
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
-
-## Additional Resources
-
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.

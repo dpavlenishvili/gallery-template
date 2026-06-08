@@ -1,4 +1,26 @@
-<section class="placeholder">
-  <h1>Favorites</h1>
-  <p>Your saved photos will be listed here.</p>
-</section>
+@if (favorites.count()) {
+  <ul class="grid">
+    @for (photo of favorites.items(); track photo.id) {
+      <li>
+        <a
+          class="tile"
+          [routerLink]="['/photos', photo.id]"
+          [attr.aria-label]="'View photo by ' + photo.author"
+        >
+          <img
+            appImageStatus
+            [ngSrc]="photo.download_url"
+            fill
+            sizes="(max-width: 600px) 100vw, (max-width: 900px) 50vw, 33vw"
+            [alt]="photo.author"
+          />
+        </a>
+      </li>
+    }
+  </ul>
+} @else {
+  <div class="empty">
+    <p>You haven't favorited any photos yet.</p>
+    <a mat-stroked-button routerLink="/">Browse photos</a>
+  </div>
+}

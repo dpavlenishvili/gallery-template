@@ -1,6 +1,31 @@
-<section class="placeholder">
-  <h1>Photo</h1>
-  <p>
-    The full-screen photo <code>{{ id() }}</code> will appear here.
-  </p>
-</section>
+@if (photoResource.isLoading()) {
+  <app-loading-indicator />
+} @else if (photoResource.error()) {
+  <div class="state">
+    <p>Couldn't load this photo.</p>
+    <a mat-button routerLink="/">Back to photos</a>
+  </div>
+} @else if (photoResource.value(); as photo) {
+  <div class="detail">
+    <img
+      appImageStatus
+      [ngSrc]="photo.download_url"
+      [width]="photo.width"
+      [height]="photo.height"
+      sizes="100vw"
+      priority
+      [alt]="photo.author"
+    />
+    @if (isFavorite()) {
+      <button mat-stroked-button (click)="removeFromFavorites()">
+        <mat-icon>favorite</mat-icon>
+        Remove from favorites
+      </button>
+    } @else {
+      <button mat-stroked-button (click)="favorites.add(photo)">
+        <mat-icon>favorite_border</mat-icon>
+        Add to favorites
+      </button>
+    }
+  </div>
+}
