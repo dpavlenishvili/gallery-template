@@ -1,0 +1,39 @@
+@use '../../styles/image-grid' as grid;
+
+:host {
+  display: block;
+}
+
+.card {
+  @include grid.photo-tile;
+  width: 100%;
+  padding: 0;
+  border: none;
+  cursor: pointer;
+}
+
+.card img {
+  object-fit: cover;
+}
+
+.marker {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.45);
+  color: #fff;
+  pointer-events: none;
+  transition:
+    color 0.15s ease,
+    transform 0.15s ease;
+}
+
+.card.is-favorite .marker {
+  color: #ff5252;
+  transform: scale(1.05);
+}

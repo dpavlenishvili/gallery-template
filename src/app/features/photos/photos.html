@@ -1,4 +1,24 @@
-<section class="placeholder">
-  <h1>Photos</h1>
-  <p>The infinite, random photostream will live here.</p>
-</section>
+@if (stream.photos().length) {
+  <app-photo-grid
+    [photos]="stream.photos()"
+    [favoriteIds]="favorites.ids()"
+    (select)="favorites.toggle($event)"
+  />
+}
+
+@if (stream.status() === 'loading') {
+  <app-loading-indicator />
+}
+
+@if (stream.status() === 'error') {
+  <div class="state">
+    <p>Couldn't load photos.</p>
+    <button mat-stroked-button (click)="stream.loadMore()">Try again</button>
+  </div>
+}
+
+@if (stream.status() === 'ready' && !stream.photos().length) {
+  <div class="state">No photos to show.</div>
+}
+
+<div appInfiniteScroll (scrolled)="stream.loadMore()"></div>

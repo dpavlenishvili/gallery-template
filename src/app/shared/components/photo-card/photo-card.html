@@ -1,0 +1,24 @@
+<button
+  type="button"
+  class="card"
+  [class.is-favorite]="favorite()"
+  [attr.aria-pressed]="favorite()"
+  [attr.aria-label]="
+    (favorite() ? 'Remove ' : 'Add ') +
+    photo().author +
+    (favorite() ? ' from favorites' : ' to favorites')
+  "
+  (click)="select.emit(photo())"
+>
+  <img
+    appImageStatus
+    [ngSrc]="photo().download_url"
+    fill
+    sizes="(max-width: 600px) 100vw, (max-width: 900px) 50vw, 33vw"
+    [priority]="priority()"
+    [alt]="photo().author"
+  />
+  <span class="marker">
+    <mat-icon>{{ favorite() ? 'favorite' : 'add' }}</mat-icon>
+  </span>
+</button>

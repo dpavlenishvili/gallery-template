@@ -1,0 +1,61 @@
+@mixin photo-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+
+  @media (max-width: 900px) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  @media (max-width: 600px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+@mixin photo-tile {
+  position: relative;
+  display: block;
+  aspect-ratio: 1 / 1;
+  border-radius: 12px;
+  overflow: hidden;
+  background: var(--mat-sys-surface-container-high);
+
+  &:focus-visible {
+    outline: 2px solid var(--mat-sys-primary);
+    outline-offset: 2px;
+  }
+
+  &:has(img.is-loading)::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      90deg,
+      transparent,
+      color-mix(in srgb, var(--mat-sys-on-surface) 8%, transparent),
+      transparent
+    );
+    transform: translateX(-100%);
+    animation: image-shimmer 1.3s ease-in-out infinite;
+  }
+
+  img {
+    color: transparent;
+  }
+
+  img.is-error {
+    opacity: 0;
+  }
+
+  &:has(img.is-error)::after {
+    content: 'broken_image';
+    position: absolute;
+    inset: 0;
+    display: grid;
+    place-items: center;
+    font-family: 'Material Icons';
+    font-feature-settings: 'liga';
+    font-size: 36px;
+    color: var(--mat-sys-on-surface-variant);
+  }
+}

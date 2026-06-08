@@ -1,0 +1,5 @@
+@use '../../styles/image-grid' as grid;
+
+:host .grid {
+  @include grid.photo-grid;
+}
