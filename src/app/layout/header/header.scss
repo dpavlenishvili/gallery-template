@@ -1,0 +1,21 @@
+.header {
+  .nav {
+    max-width: var(--content-max);
+    width: 100%;
+    margin-inline: auto;
+    display: flex;
+    justify-content: center;
+    gap: 0.5rem;
+  }
+
+  .active-link {
+    font-weight: 600;
+    background: var(--mat-sys-secondary-container);
+    color: var(--mat-sys-on-secondary-container);
+  }
+
+  .nav a:focus-visible {
+    outline: 2px solid var(--mat-sys-primary);
+    outline-offset: 2px;
+  }
+}
